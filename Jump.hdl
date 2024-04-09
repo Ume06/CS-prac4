@@ -28,12 +28,19 @@ CHIP Jump {
 
 PARTS:
     // Put your code here:
-    Or(a=zr, b=ng, out=lte);
-    Not(in=lte, out=gt);
-    And(a=j3, b=ng, out=jumpBecauseLT);
-    And(a=j2, b=zr, out=jumpBecauseEQ);
-    And(a=j1, b=gt, out=jumpBecauseGT);
-    Or(a=jumpBecauseLT, b=jumpBecauseGT, out=jumpBecauseLTGT);
-    Or(a=jumpBecauseLTGT, b=jumpBecauseEQ, out=jumpBecause);
-    And(a=jumpBecause, b=isC, out=jump);
+    // Check if ALU output is < 0 (ng is true)
+    And(a=j1, b=ng, out=j1ng);
+    
+    // Check if ALU output == 0 (zr is true)
+    And(a=j2, b=zr, out=j2zr);
+
+    // Check if ALU output > 0 (ng and zr are both false)
+    Not(in=ng, out=ngNot);
+    Not(in=zr, out=zrNot);
+    And(a=ngNot, b=zrNot, out=gt0);
+    And(a=j3, b=gt0, out=j3gt0);
+
+    // Combine the results from the three cases and output the final jump signal
+    Or(a=j1ng, b=j2zr, out=j1j2);
+    Or(a=j1j2, b=j3gt0, out=jump);
 }
