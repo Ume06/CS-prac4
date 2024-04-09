@@ -28,7 +28,6 @@ CHIP Jump {
 
 PARTS:
     // Put your code here:
-    PARTS:
     Or(a=zr, b=ng, out=lte);
     Not(in=lte, out=gt);
     And(a=j3, b=ng, out=jumpBecauseLT);
